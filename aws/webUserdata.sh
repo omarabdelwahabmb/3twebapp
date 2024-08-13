@@ -16,4 +16,4 @@ echo "ProxyPassReverse / http://localhost:80/" >> httpd.conf
 
 #internal-app-2103124511.us-east-1.elb.amazonaws.com
 
-#sed -i 's/10.0.138.100/internal-app-2103124511.us-east-1.elb.amazonaws.com/g' /etc/httpd/conf/httpd.conf
+#sed -i 's/localhost/internal-app-2103124511.us-east-1.elb.amazonaws.com/g' /etc/httpd/conf/httpd.conf
