@@ -9,13 +9,8 @@ resource "aws_vpc" "main" {
 
 module "subnets" {
   source = "./modules/subnets"
-}
-
-module "subnets" {
-  source = "./subnets"
   vpc_id = aws_vpc.this.id
 }
-
 
 module "igw" {
   source = "./modules/igw"
