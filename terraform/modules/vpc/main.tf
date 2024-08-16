@@ -6,22 +6,3 @@ resource "aws_vpc" "main" {
     Name = "main"
   }
 }
-
-module "subnets" {
-  source = "./modules/subnets"
-  vpc_id = aws_vpc.this.id
-}
-
-module "igw" {
-  source = "./modules/igw"
-}
-
-
-module "public_route" {
-  source = "./modules/public_route"
-}
-
-
-module "private_route" {
-  source = "./modules/private_route"
-}
