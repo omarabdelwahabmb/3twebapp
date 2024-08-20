@@ -52,4 +52,20 @@ variable "private_subnet4_cidr" {
   type        = string
 }
 
+####################
+## DB Instance    ##
+####################
+variable "database-instance-class" {
+  default     = "db.t2.micro"
+  description = "The Database Instance type"
+  type        = string
+}
+####################
+##     multi_AZ    #
+####################
+variable "multi-az-deployment" {
+  default     = false
+  description = "Create a Standby DB Instance"
+  type        = bool
+}
 
