@@ -15,6 +15,7 @@ def destroy() {
         dir ("${params.path}/terraform") {
             echo "destroying"
             sh "terraform init"
+            echo "finished init"
             sh "terraform destroy -auto-approve"
         }
     }
