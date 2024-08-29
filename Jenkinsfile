@@ -4,8 +4,6 @@ def apply() {
     script {
         dir ("${params.projectPath}/terraform") { 
             echo "applying"
-            sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
-            sh("terraform init")
             sh("terraform apply -auto-approve 'tfplan'")
             sh("terraform destroy --target aws_instance.PublicWebTemplate")
             sh("terraform destroy --target aws_instance.PublicappTemplate")
@@ -18,8 +16,6 @@ def destroy() {
     script {
         dir ("${params.projectPath}/terraform") {
             echo "destroying"
-            sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
-            sh("terraform init")
             sh("terraform destroy -auto-approve 'tfplan'")
             sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
         }
@@ -52,7 +48,11 @@ pipeline {
         stage('Plan') {
             steps {
                 script {
-                    sh ("terraform plan -out tfplan")
+                    dir ("${params.projectPath}/terraform") {
+                        sh("terraform init")
+                        sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
+                        sh ("terraform plan -out tfplan")
+                    }
                     apply = input (message: "Do you want to apply the plan?",
                                    parameters: [choice(name: 'approve', choices:'apply\nno',
                                    description: 'Please review the plan', defaultValue: 'no')])
