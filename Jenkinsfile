@@ -1,11 +1,14 @@
+// arn:aws:s3:::yat-group3
 def apply() {
     script {
         dir ("${params.projectPath}/terraform") { 
             echo "applying"
+            sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
             sh("terraform init")
             sh("terraform apply -auto-approve")
             sh("terraform destroy --target aws_instance.PublicWebTemplate")
             sh("terraform destroy --target aws_instance.PublicappTemplate")
+            sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
         }
     }
 }
@@ -14,9 +17,10 @@ def destroy() {
     script {
         dir ("${params.projectPath}/terraform") {
             echo "destroying"
-            //echo "${PATH}"
+            sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
             sh("terraform init")
             sh("terraform destroy -auto-approve")
+            sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
         }
     }
 }
