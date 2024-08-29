@@ -14,6 +14,7 @@ def destroy() {
     script {
         dir ("${params.projectPath}/terraform") {
             echo "destroying"
+            echo "${PATH}"
             sh("aws iam get-user")
             sh("terraform init")
             sh("terraform destroy -auto-approve")
