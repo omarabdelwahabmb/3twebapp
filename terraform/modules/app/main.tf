@@ -78,6 +78,28 @@ data "template_file" "app" {
   }
 }
 
+#                         You call it from main so . is inside the module
+# user_data = base64encode(templatefile("./user-data/user-data-presentation-tier.sh", {
+#     application_load_balancer = var.alb_App_dns_name,
+#     region                    = var.region
+#   }))
+
+  #  user_data = base64encode(templatefile("./user-data/user-data-application-tier.sh", {
+  #   rds_hostname  = var.rds_address,
+  #   rds_username  = var.rds_db_admin,
+  #   rds_password  = var.rds_db_password,
+  #   rds_port      = 3306,
+  #   rds_db_name   = var.db_name,
+  #   region        = var.region
+  # }))
+
+# the same shape of the variables in the template
+# terraform doesn't clear the cache but aws cli does
+# Try to do the following commands before creating another instance with a new ami
+# in order to clear the old ami from cache
+# sudo rm -rf /var/lib/cloud/*
+# sudo cloud-init clean
+
 resource "aws_launch_template" "auto-scaling-group-private" {
   name_prefix   = "auto-scaling-group-private"
   image_id      = var.app_ami
