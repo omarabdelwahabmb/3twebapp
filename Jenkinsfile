@@ -13,8 +13,8 @@ def apply() {
 def destroy() {
     script {
         dir ("${params.path}/terraform") {
+            echo "$PATH"
             sh("aws iam get-user")
-            echo "destroying"
             sh("terraform init")
             sh("terraform destroy -auto-approve")
         }
