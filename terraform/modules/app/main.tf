@@ -70,13 +70,21 @@ resource "aws_security_group" "app-security-group" {
   }
 }
 
+data "template_file" "app" {
+  template = "${file("${path.module}/app.tpl")}"
+
+  vars = {
+    database = "${var.database}"
+  }
+}
 
 resource "aws_launch_template" "auto-scaling-group-private" {
   name_prefix   = "auto-scaling-group-private"
   image_id      = var.app_ami
   instance_type = "t2.micro"
-  key_name      = "key"
-  user_data     = base64encode("sed -i 's/localhost/${var.database}/g' /usr/src/nodejsapp/app.js")
+  key_name      = var.key_pair
+  user_data = "${base64encode(data.template_file.app.rendered)}"
+  #user_data     = base64encode("sed -i 's/localhost/${var.database}/g' /usr/src/nodejsapp/app.js")
   network_interfaces {
     subnet_id       = var.private_1
     security_groups = [aws_security_group.app-security-group.id]

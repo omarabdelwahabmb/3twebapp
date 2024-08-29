@@ -69,3 +69,7 @@ variable "multi-az-deployment" {
   type        = bool
 }
 
+variable "key_pair" {
+  type = string
+  default = "miro7775000"
+}

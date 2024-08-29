@@ -25,6 +25,7 @@ module "web" {
   public_2 = module.vpc.public_2
   web_ami  = module.ami.web_ami
   app_dnsname = module.app.app_dnsname
+  key_pair = var.key_pair
 } 
 
 
@@ -36,7 +37,7 @@ module "app" {
   web_sg = module.web.web_sg
   app_ami= module.ami.app_ami
   database= module.database.database
-
+  key_pair = var.key_pair
 } 
 
 module "database" {
@@ -50,8 +51,8 @@ module "database" {
 module "ami" {
   source = "./modules/ami"
   public_1 = module.vpc.public_1
-  web_lb_sg = module.web.web_lb_sg
-  
+  web_lb_sg = module.web.web_lb_sg  
+  key_pair = var.key_pair
 } 
 
 
