@@ -1,6 +1,6 @@
 def apply() {
     script {
-        dir ("${params.path}/terraform") { 
+        dir ("${params.projectPath}/terraform") { 
             echo "applying"
             sh("terraform init")
             sh("terraform apply -auto-approve")
@@ -12,8 +12,8 @@ def apply() {
 
 def destroy() {
     script {
-        dir ("${params.path}/terraform") {
-            echo "$PATH"
+        dir ("${params.projectPath}/terraform") {
+            echo "destroying"
             sh("aws iam get-user")
             sh("terraform init")
             sh("terraform destroy -auto-approve")
@@ -31,7 +31,7 @@ pipeline {
     }
 
     parameters {
-        string(defaultValue: '/home/omar/Eng/Courses/DEPI/Technical/Project3tier/trial2/3twebapp', description: 'Please, Enter project path', name: 'path')
+        string(defaultValue: '/home/omar/Eng/Courses/DEPI/Technical/Project3tier/trial2/3twebapp', description: 'Please, Enter project path', name: 'projectPath')
         choice(name: 'action', choices: ['apply', 'destroy'], 
         description: 'Please, choose whether to apply or destroy the infrastructure.')
     }
@@ -39,7 +39,7 @@ pipeline {
     stages {
         stage('Checkout') {
            steps {
-                dir ("${params.path}") { 
+                dir ("${params.projectPath}") { 
                     git branch: 'main', url: 'https://github.com/omarabdelwahabmb/3twebapp.git'
                 }
            }
