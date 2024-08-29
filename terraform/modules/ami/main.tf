@@ -1,11 +1,14 @@
 #########webec2############
+#terraform destroy --target aws_instance.PublicWebTemplate && terraform destroy --target aws_instance.PublicappTemplate
 resource "aws_instance" "PublicWebTemplate" {
   ami                    = "ami-066784287e358dad1"
   instance_type          = "t2.micro"
   subnet_id              = var.public_1
   vpc_security_group_ids = [var.web_lb_sg]
   key_name               = var.key_pair
-  user_data              = file("{path.module}../../../aws/webUserdata.sh")
+  user_data              = base64encode(templatefile("{path.module}../../../aws/webUserdata.sh", {
+    app_dnsname = "${var.app_dnsname}"
+  }))
 
   tags = {
     Name = "web-ec2"
@@ -21,6 +24,11 @@ resource "aws_ami_from_instance" "web" {
   # }
 }
 
+# user_data = base64encode(templatefile("./user-data/user-data-presentation-tier.sh", {
+#     application_load_balancer = var.alb_App_dns_name,
+#     region                    = var.region
+#   }))
+
 
 ############app_ec2###################
 resource "aws_instance" "PublicappTemplate" {
@@ -29,7 +37,9 @@ resource "aws_instance" "PublicappTemplate" {
   subnet_id              = var.public_1
   vpc_security_group_ids = [var.web_lb_sg]
   key_name               = var.key_pair
-  user_data              = file("${path.module}/../../../aws/appUserData.sh")
+  user_data              = base64encode(templatefile("${path.module}/../../../aws/appUserData.sh", {
+    database = "${var.database}"
+  }))
   tags = {
     Name = "app-ec2"
   }

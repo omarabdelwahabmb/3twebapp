@@ -14,13 +14,13 @@ resource "aws_security_group" "app-alb-security-group" {
     security_groups = ["${var.web_sg}"]
   }
 
- # ingress {
-  #  description     = "ssh access"
-   # from_port       = 22
-   # to_port         = 22
-   # protocol        = "tcp"
-   # security_groups = ["${aws_security_group.bastion-security-group.id}"]
-  #}
+#  ingress {
+#    description     = "ssh access"
+#    from_port       = 22
+#    to_port         = 22
+#    protocol        = "tcp"
+#    security_groups = ["${aws_security_group.bastion-security-group.id}"]
+#   }
 
   egress {
     from_port   = 0
@@ -70,14 +70,6 @@ resource "aws_security_group" "app-security-group" {
   }
 }
 
-data "template_file" "app" {
-  template = "${file("${path.module}/app.tpl")}"
-
-  vars = {
-    database = "${var.database}"
-  }
-}
-
 #                         You call it from main so . is inside the module
 # user_data = base64encode(templatefile("./user-data/user-data-presentation-tier.sh", {
 #     application_load_balancer = var.alb_App_dns_name,
@@ -105,8 +97,7 @@ resource "aws_launch_template" "auto-scaling-group-private" {
   image_id      = var.app_ami
   instance_type = "t2.micro"
   key_name      = var.key_pair
-  user_data = "${base64encode(data.template_file.app.rendered)}"
-  #user_data     = base64encode("sed -i 's/localhost/${var.database}/g' /usr/src/nodejsapp/app.js")
+
   network_interfaces {
     subnet_id       = var.private_1
     security_groups = [aws_security_group.app-security-group.id]

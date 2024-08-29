@@ -25,7 +25,7 @@ const app = express();
 // host should be changed
 const sequelize = new Sequelize('mydatabase', 'root', '12345678', {
   dialect: 'mysql',
-  host: 'localhost',
+  host: "${database}",
 });
 
 // Define a model

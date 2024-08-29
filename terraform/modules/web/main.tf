@@ -67,20 +67,9 @@ resource "aws_security_group" "webserver-security-group" {
 #### ASG for Presentation Tier ###
 ##################################
 
-data "template_file" "web" {
-  template = "${file("${path.module}/web.tpl")}"
-
-  vars = {
-    app_dnsname = "${var.app_dnsname}"
-  }
-}
-
-
 resource "aws_launch_template" "auto-scaling-group" {
   name_prefix   = "auto-scaling-group"
   image_id      = var.web_ami
-  user_data = "${base64encode(data.template_file.web.rendered)}"
-  #user_data     = base64encode("sed -i 's/localhost/${var.app_dnsname}/g' /etc/httpd/conf/httpd.conf")
   instance_type = "t2.micro"
   key_name      = var.key_pair
   network_interfaces {
