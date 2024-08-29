@@ -31,20 +31,22 @@ pipeline {
     stages {
         stage('Checkout') {
            steps {
-                dir (${params.path}) { 
+                dir ("${params.path}") { 
                     git branch: 'main', url: 'https://github.com/omarabdelwahabmb/3twebapp.git'
                 }
            }
         }
         stage('Build') {
             steps {
-                switch(params.choice) {
-                    case "apply":
-                        apply()
-                    case "destroy":
-                        destroy()
-                    default:
-                        echo "wrong choice!"
+                script {
+                    switch(params.choice) {
+                        case "apply":
+                            apply()
+                        case "destroy":
+                            destroy()
+                        default:
+                            echo "wrong choice!"
+                    }
                 }
             }
         }
