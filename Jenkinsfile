@@ -50,8 +50,8 @@ pipeline {
            }
         }
         stage('Plan') {
-            script {
-                steps {
+            steps {
+                script {
                     sh ("terraform plan -out tfplan")
                     apply = input (message: "Do you want to apply the plan?",
                                    parameters: [choice(name: 'approve', choices:'apply\nno',
@@ -76,7 +76,9 @@ pipeline {
         }
         stage("decline") {
             when { expression { approve == "no" } }
-            echo "You declined applying the plan."
+            steps {
+                echo "You declined applying the plan."
+            }
         }
     }
 }
