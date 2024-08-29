@@ -39,7 +39,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    switch(${params.action}) {
+                    switch(params.action) {
                         case "apply":
                             apply()
                         case "destroy":
