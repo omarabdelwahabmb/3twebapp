@@ -2,7 +2,7 @@ def apply() {
     script {
         dir ("${params.path}/terraform") { 
             echo "applying"
-            sh "terraform init"
+            //sh "terraform init"
             sh "terraform apply -auto-approve"
             sh "terraform destroy --target aws_instance.PublicWebTemplate"
             sh "terraform destroy --target aws_instance.PublicappTemplate"
@@ -14,7 +14,7 @@ def destroy() {
     script {
         dir ("${params.path}/terraform") {
             echo "destroying"
-            sh (returnStdout: true, script: "terraform init") 
+            //sh (returnStdout: true, script: "terraform init") 
             echo "finished init"
             sh "terraform destroy -auto-approve"
         }
