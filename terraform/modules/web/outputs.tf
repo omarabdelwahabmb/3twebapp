@@ -7,5 +7,3 @@ output "web_sg" {
 }
 
 
-
-
