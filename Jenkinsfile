@@ -1,3 +1,4 @@
+def approve = "no"
 // arn:aws:s3:::yat-group3
 def apply() {
     script {
@@ -5,7 +6,7 @@ def apply() {
             echo "applying"
             sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
             sh("terraform init")
-            sh("terraform apply -auto-approve")
+            sh("terraform apply -auto-approve 'tfplan'")
             sh("terraform destroy --target aws_instance.PublicWebTemplate")
             sh("terraform destroy --target aws_instance.PublicappTemplate")
             sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
@@ -19,7 +20,7 @@ def destroy() {
             echo "destroying"
             sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
             sh("terraform init")
-            sh("terraform destroy -auto-approve")
+            sh("terraform destroy -auto-approve 'tfplan'")
             sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
         }
     }
@@ -48,7 +49,18 @@ pipeline {
                 }
            }
         }
+        stage('Plan') {
+            script {
+                steps {
+                    sh ("terraform plan -out tfplan")
+                    apply = input (message: "Do you want to apply the plan?",
+                                   parameters: [choice(name: 'approve', choices:'apply\nno',
+                                   description: 'Please review the plan', defaultValue: 'no')])
+                }
+            }
+        }
         stage('Build') {
+            when { expression { approve == "apply" } }
             steps {
                 script {
                     switch(params.action) {
@@ -61,6 +73,10 @@ pipeline {
                     }
                 }
             }
+        }
+        stage("decline") {
+            when { expression { approve == "no" } }
+            echo "You declined applying the plan."
         }
     }
 }
