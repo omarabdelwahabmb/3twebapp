@@ -53,9 +53,9 @@ pipeline {
                         sh("aws s3 cp s3://yat-group3/terraform/ . --exclude \"*\" --include \"*.tfstat*\" --recursive")
                         sh ("terraform plan -out tfplan")
                     }
-                    apply = input (message: "Do you want to apply the plan?",
+                    approve = input (message: "Do you want to apply the plan?",
                                    parameters: [choice(name: 'approve', choices:'apply\nno',
-                                   description: 'Please review the plan', defaultValue: 'no')])
+                                   description: 'Please review the plan')])
                 }
             }
         }
