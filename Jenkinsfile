@@ -16,7 +16,7 @@ def destroy() {
     script {
         dir ("${params.projectPath}/terraform") {
             echo "destroying"
-            sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
+            sh("aws s3 cp s3://yat-group3/terraform/ .  --exclude \"*\" --include \"*.tfstat*\" --recursive")
             sh("terraform destroy -auto-approve")
             sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
         }
