@@ -5,8 +5,8 @@ def apply() {
         dir ("${params.projectPath}/terraform") { 
             echo "applying"
             sh("terraform apply -auto-approve 'tfplan'")
-            sh("terraform destroy --target aws_instance.PublicWebTemplate")
-            sh("terraform destroy --target aws_instance.PublicappTemplate")
+            sh("terraform destroy --target module.ami.aws_instance.PublicWebTemplate")
+            sh("terraform destroy --target module.ami.aws_instance.PublicappTemplate")
             sh("aws s3 cp . s3://yat-group3/terraform/ --exclude \"*\" --include \"*.tfstat*\" --recursive")
         }
     }
