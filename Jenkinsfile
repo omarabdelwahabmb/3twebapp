@@ -66,10 +66,13 @@ pipeline {
                     switch(params.action) {
                         case "apply":
                             apply()
+                            break;
                         case "destroy":
                             destroy()
+                            break;
                         default:
                             echo "wrong choice!"
+                            break;
                     }
                 }
             }
